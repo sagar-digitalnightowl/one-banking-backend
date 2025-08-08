@@ -14,9 +14,16 @@ app.listen(port, () => {
 });
 
 app.use(cors({
-    origin: process.env.ALLOWED_CLIENT,
-    credentials: true
-}))
+  origin: (origin, callback) => {
+    const allowed = process.env.ALLOWED_CLIENT?.split(",") || [];
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS Not Allowed"));
+    }
+  },
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
 
