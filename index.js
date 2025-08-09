@@ -14,7 +14,7 @@ app.listen(port, () => {
 });
 
 app.use(cors({
-    origin: ["https://one-banking-landing-page.onrender.com","http://localhost:8080"],
+    origin: process.env.ALLOWED_CLIENT,
     credentials: true
 }))
 app.use(cookieParser());

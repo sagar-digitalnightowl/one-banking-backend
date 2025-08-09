@@ -332,7 +332,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const totalCount = await UserModel.countDocuments();
-    const totalPage = Math.ceil(totalCoun / limit);
+    const totalPage = Math.ceil(totalCount / limit);
 
     const allUsers = await UserModel.find()
       .sort({ createdAt: -1 })
