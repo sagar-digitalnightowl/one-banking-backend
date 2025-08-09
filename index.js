@@ -13,6 +13,8 @@ app.listen(port, () => {
   console.log(`${port} : Server start successfully`);
 });
 
+console.log(process.env.ALLOWED_CLIENT, "Allowed origin")
+
 app.use(cors({
     origin: process.env.ALLOWED_CLIENT,
     credentials: true
