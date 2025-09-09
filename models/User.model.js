@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema(
     referredBy: {
       type: String,
     },
+    referredByName: {
+      type: String,
+    },
+    referredByEmail: {
+      type: String,
+    },
     fingerprint: {
       type: String,
     },

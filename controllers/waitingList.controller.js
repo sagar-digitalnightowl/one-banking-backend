@@ -186,11 +186,17 @@ export const saveUserInfo = async (req, res) => {
       });
     }
 
+
     const userexist = await UserModel.findOne({ email });
     if (!userexist) {
       return res.status(404).json({
         message: "User not found!",
       });
+    }
+
+    let whoReferred = null;
+    if (referredBy) {
+      whoReferred = await UserModel.findOne({ referralCode: referredBy });
     }
 
     try {
@@ -221,6 +227,14 @@ export const saveUserInfo = async (req, res) => {
           {
             name: "referred_by",
             value: referredBy,
+          },
+          {
+            name: "referred_by_name",
+            value: whoReferred?.fullName || "",
+          },
+          {
+            name: "referred_by_email",
+            value: whoReferred?.email || "",
           },
           {
             name: "fingerprint",
@@ -258,6 +272,8 @@ export const saveUserInfo = async (req, res) => {
         countryCode,
         phone,
         referredBy,
+        referredByName: whoReferred?.fullName,
+        referredByEmail: whoReferred?.email,
         fingerprint,
         ip,
         agreedOnUpdates,
