@@ -328,10 +328,10 @@ export const giftClaimed = async (req, res) => {
               <title>Referral Reward Email</title>
             </head>
             <body>
-              <p>Dear ${referrerUser.name},</p>
+              <p>Dear ${referrerUser.fullName},</p>
 
               <p>
-                Great news — your friend ${user.name} (${user.email}) has just claimed their welcome gift using your referral!
+                Great news — your friend ${user.fullName} (${user.email}) has just claimed their welcome gift using your referral!
               </p>
 
               <p>
