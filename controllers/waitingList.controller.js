@@ -3,6 +3,7 @@ import UserModel from "../models/User.model.js";
 import VerificationTokenModel from "../models/VerificationToken.model.js";
 import { v4 as uuid } from "uuid";
 import { generateUniqueReferralCode } from "../utils/referralCode.js";
+import { sendEmail } from "../utils/nodemailer.js";
 
 export const sendVerificationEmail = async (req, res) => {
   try {
@@ -186,7 +187,6 @@ export const saveUserInfo = async (req, res) => {
       });
     }
 
-
     const userexist = await UserModel.findOne({ email });
     if (!userexist) {
       return res.status(404).json({
@@ -309,6 +309,51 @@ export const giftClaimed = async (req, res) => {
         success: false,
         message: "User not found!",
       });
+    }
+
+    if (user.referredByEmail) {
+      const referrerUser = await UserModel.findOne({
+        email: user.referredByEmail,
+      });
+
+      if (referrerUser) {
+        try {
+          await sendEmail(
+            referrerUser.email,
+            "🎉 Great news — your friend just claimed their gift!",
+            `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <title>Referral Reward Email</title>
+            </head>
+            <body>
+              <p>Dear ${referrerUser.name},</p>
+
+              <p>
+                Great news — your friend ${user.name} (${user.email}) has just claimed their welcome gift using your referral!
+              </p>
+
+              <p>
+                This means you’re now eligible for your own special reward 🎁
+              </p>
+
+              <p>
+                Thanks for helping us grow our community and shape the future of AI-powered banking.
+              </p>
+
+              <p>
+                Warm regards,<br>
+                Your oneBanking Team 💚
+              </p>
+            </body>
+            </html>
+            `
+          );
+        } catch (err) {
+          console.error("Failed to send referral email:", err);
+        }
+      }
     }
 
     return res.status(200).json({
